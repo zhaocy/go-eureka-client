@@ -14,8 +14,8 @@ func (c *Client) GetApplications() (*Applications, error) {
 	return applications, err
 }
 
-func (c *Client) GetApplication(appId string) (*Application, error) {
-	values := []string{"apps", appId}
+func (c *Client) GetApplication(appName string) (*Application, error) {
+	values := []string{"apps", appName}
 	path := strings.Join(values, "/")
 	response, err := c.Get(path);
 	if err != nil {
@@ -25,8 +25,8 @@ func (c *Client) GetApplication(appId string) (*Application, error) {
 	err = xml.Unmarshal(response.Body, application)
 	return application, err
 }
-func (c *Client) GetInstance(appId, instanceId string) (*InstanceInfo, error) {
-	values := []string{"apps", appId, instanceId}
+func (c *Client) GetInstance(appName, instanceId string) (*InstanceInfo, error) {
+	values := []string{"apps", appName, instanceId}
 	path := strings.Join(values, "/")
 	response, err := c.Get(path);
 	if err != nil {

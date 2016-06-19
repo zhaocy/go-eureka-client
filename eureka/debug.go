@@ -17,5 +17,5 @@ func SetLogger(loggerLog *log.Logger) {
 
 func init() {
 	// Default logger uses the go default log.
-	logger = gominlog.NewClassicMinLogWithPackageName("go-eureka-client")
+	logger = gominlog.NewClassicMinLogWithPackageName("eureka")
 }

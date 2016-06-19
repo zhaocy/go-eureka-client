@@ -3,10 +3,11 @@ package eureka
 import (
 	"encoding/json"
 	"strings"
+	log "github.com/Sirupsen/logrus"
 )
 
-func (c *Client) RegisterInstance(appId string, instanceInfo *InstanceInfo) error {
-	values := []string{"apps", appId}
+func (c *Client) RegisterInstance(appName string, instanceInfo *InstanceInfo) error {
+	values := []string{"apps", appName}
 	path := strings.Join(values, "/")
 	instance := &Instance{
 		Instance: instanceInfo,
@@ -16,6 +17,13 @@ func (c *Client) RegisterInstance(appId string, instanceInfo *InstanceInfo) erro
 		return err
 	}
 
-	_, err = c.Post(path, body)
+	res, err := c.Post(path, body)
+	if res != nil {
+		log.WithFields(log.Fields{
+			"path":path,
+			"status":res.StatusCode,
+			"body":string(body),
+		}).Info("RegisterInstance ")
+	}
 	return err
 }

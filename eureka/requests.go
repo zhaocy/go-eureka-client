@@ -9,9 +9,9 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"strconv"
 	"sync"
 	"time"
-	"strconv"
 )
 
 // Errors introduced by handling requests
@@ -42,32 +42,35 @@ type Port struct {
 	Enabled bool `xml:"enabled,attr" json:"@enabled"`
 }
 type InstanceInfo struct {
-	HostName                      string            `xml:"hostName" json:"hostName"`
-	HomePageUrl                   string            `xml:"homePageUrl,omitempty" json:"homePageUrl,omitempty"`
-	StatusPageUrl                 string            `xml:"statusPageUrl" json:"statusPageUrl"`
-	HealthCheckUrl                string            `xml:"healthCheckUrl,omitempty" json:"healthCheckUrl,omitempty"`
-	App                           string            `xml:"app" json:"app"`
-	IpAddr                        string            `xml:"ipAddr" json:"ipAddr"`
-	VipAddress                    string            `xml:"vipAddress" json:"vipAddress"`
-	secureVipAddress              string            `xml:"secureVipAddress,omitempty" json:"secureVipAddress,omitempty"`
-	Status                        string            `xml:"status" json:"status"`
-	Port                          *Port             `xml:"port,omitempty" json:"port,omitempty"`
-	SecurePort                    *Port             `xml:"securePort,omitempty" json:"securePort,omitempty"`
-	DataCenterInfo                *DataCenterInfo   `xml:"dataCenterInfo" json:"dataCenterInfo"`
-	LeaseInfo                     *LeaseInfo        `xml:"leaseInfo,omitempty" json:"leaseInfo,omitempty"`
-	Metadata                      *MetaData         `xml:"metadata,omitempty" json:"metadata,omitempty"`
-	IsCoordinatingDiscoveryServer bool              `xml:"isCoordinatingDiscoveryServer,omitempty" json:"isCoordinatingDiscoveryServer,omitempty"`
-	LastUpdatedTimestamp          int               `xml:"lastUpdatedTimestamp,omitempty" json:"lastUpdatedTimestamp,omitempty"`
-	LastDirtyTimestamp            int               `xml:"lastDirtyTimestamp,omitempty" json:"lastDirtyTimestamp,omitempty"`
-	ActionType                    string            `xml:"actionType,omitempty" json:"actionType,omitempty"`
-	Overriddenstatus              string            `xml:"overriddenstatus,omitempty" json:"overriddenstatus,omitempty"`
-	CountryId                     int               `xml:"countryId,omitempty" json:"countryId,omitempty"`
-
+	HostName                      string          `xml:"hostName" json:"hostName"`
+	HomePageUrl                   string          `xml:"homePageUrl,omitempty" json:"homePageUrl,omitempty"`
+	StatusPageUrl                 string          `xml:"statusPageUrl" json:"statusPageUrl"`
+	HealthCheckUrl                string          `xml:"healthCheckUrl,omitempty" json:"healthCheckUrl,omitempty"`
+	App                           string          `xml:"app" json:"app"`
+	IpAddr                        string          `xml:"ipAddr" json:"ipAddr"`
+	VipAddress                    string          `xml:"vipAddress" json:"vipAddress"`
+	SecureVipAddress              string          `xml:"secureVipAddress,omitempty" json:"secureVipAddress,omitempty"`
+	Status                        string          `xml:"status" json:"status"`
+	Port                          *Port           `xml:"port,omitempty" json:"port,omitempty"`
+	SecurePort                    *Port           `xml:"securePort,omitempty" json:"securePort,omitempty"`
+	DataCenterInfo                *DataCenterInfo `xml:"dataCenterInfo" json:"dataCenterInfo"`
+	LeaseInfo                     *LeaseInfo      `xml:"leaseInfo,omitempty" json:"leaseInfo,omitempty"`
+	Metadata                      *MetaData       `xml:"metadata,omitempty" json:"metadata,omitempty"`
+	IsCoordinatingDiscoveryServer bool            `xml:"isCoordinatingDiscoveryServer,omitempty" json:"isCoordinatingDiscoveryServer,omitempty"`
+	LastUpdatedTimestamp          int             `xml:"lastUpdatedTimestamp,omitempty" json:"lastUpdatedTimestamp,omitempty"`
+	LastDirtyTimestamp            int             `xml:"lastDirtyTimestamp,omitempty" json:"lastDirtyTimestamp,omitempty"`
+	ActionType                    string          `xml:"actionType,omitempty" json:"actionType,omitempty"`
+	Overriddenstatus              string          `xml:"overriddenstatus,omitempty" json:"overriddenstatus,omitempty"`
+	CountryId                     int             `xml:"countryId,omitempty" json:"countryId,omitempty"`
+	//
+	InstanceId   string `xml:"instanceId" json:"instanceId"`
+	AppName      string `xml:"appName,omitempty" json:"appName,omitempty"`
+	AppGroupName string `xml:"appGroupName,omitempty" json:"appGroupName,omitempty"`
 }
 type DataCenterInfo struct {
-	Name     string             `xml:"name" json:"name"`
-	Class    string             `xml:"class,attr" json:"@class"`
-	Metadata DataCenterMetadata `xml:"metadata,omitempty" json:"metadata,omitempty"`
+	Name     string              `xml:"name" json:"name"`
+	Class    string              `xml:"class,attr" json:"@class"`
+	Metadata *DataCenterMetadata `xml:"metadata,omitempty" json:"metadata,omitempty"`
 }
 
 type DataCenterMetadata struct {
@@ -86,12 +89,12 @@ type DataCenterMetadata struct {
 
 type LeaseInfo struct {
 	EvictionDurationInSecs uint `xml:"evictionDurationInSecs,omitempty" json:"evictionDurationInSecs,omitempty"`
-	RenewalIntervalInSecs  int `xml:"renewalIntervalInSecs,omitempty" json:"renewalIntervalInSecs,omitempty"`
-	DurationInSecs         int `xml:"durationInSecs,omitempty" json:"durationInSecs,omitempty"`
-	RegistrationTimestamp  int `xml:"registrationTimestamp,omitempty" json:"registrationTimestamp,omitempty"`
-	LastRenewalTimestamp   int `xml:"lastRenewalTimestamp,omitempty" json:"lastRenewalTimestamp,omitempty"`
-	EvictionTimestamp      int `xml:"evictionTimestamp,omitempty" json:"evictionTimestamp,omitempty"`
-	ServiceUpTimestamp     int `xml:"serviceUpTimestamp,omitempty" json:"serviceUpTimestamp,omitempty"`
+	RenewalIntervalInSecs  int  `xml:"renewalIntervalInSecs,omitempty" json:"renewalIntervalInSecs,omitempty"`
+	DurationInSecs         int  `xml:"durationInSecs,omitempty" json:"durationInSecs,omitempty"`
+	RegistrationTimestamp  int  `xml:"registrationTimestamp,omitempty" json:"registrationTimestamp,omitempty"`
+	LastRenewalTimestamp   int  `xml:"lastRenewalTimestamp,omitempty" json:"lastRenewalTimestamp,omitempty"`
+	EvictionTimestamp      int  `xml:"evictionTimestamp,omitempty" json:"evictionTimestamp,omitempty"`
+	ServiceUpTimestamp     int  `xml:"serviceUpTimestamp,omitempty" json:"serviceUpTimestamp,omitempty"`
 }
 
 func NewRawRequest(method, relativePath string, body []byte, cancel <-chan bool) *RawRequest {
@@ -102,17 +105,31 @@ func NewRawRequest(method, relativePath string, body []byte, cancel <-chan bool)
 		cancel:       cancel,
 	}
 }
-
-func NewInstanceInfo(hostName, app, ip string, port int, ttl uint, isSsl bool) *InstanceInfo {
+func NewLeaseInfo(evictionDurationInSecs uint) *LeaseInfo {
+	ms := time.Now().UnixNano() / 1000000
+	if evictionDurationInSecs == 0 && evictionDurationInSecs >= 300 {
+		evictionDurationInSecs = 30
+	}
+	return &LeaseInfo{
+		EvictionDurationInSecs: evictionDurationInSecs,
+		RenewalIntervalInSecs:  10,
+		DurationInSecs:         90,
+		RegistrationTimestamp:  int(ms),
+		LastRenewalTimestamp:   int(ms),
+		ServiceUpTimestamp:     0,
+	}
+}
+func NewInstanceInfo(hostName, appName, ip string, port int, evictionDurationInSecs uint, isSsl bool) *InstanceInfo {
 	dataCenterInfo := &DataCenterInfo{
-		Name: "MyOwn",
+		Name:  "MyOwn",
+		Class: "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
 	}
-	leaseInfo := &LeaseInfo{
-		EvictionDurationInSecs: ttl,
-	}
+	leaseInfo := NewLeaseInfo(evictionDurationInSecs)
+
 	instanceInfo := &InstanceInfo{
 		HostName:       hostName,
-		App:            app,
+		App:            appName,
+		AppName:        appName,
 		IpAddr:         ip,
 		Status:         UP,
 		DataCenterInfo: dataCenterInfo,
@@ -120,31 +137,40 @@ func NewInstanceInfo(hostName, app, ip string, port int, ttl uint, isSsl bool) *
 		Metadata:       nil,
 	}
 	stringPort := ""
-	if (port != 80 && port != 443) {
+	if port != 80 && port != 443 {
 		stringPort = ":" + strconv.Itoa(port)
 	}
 	var protocol string = "http"
-	if (isSsl) {
+	portj := &Port{
+		Port:    port,
+		Enabled: true,
+	}
+	if isSsl {
 		protocol = "https"
-		instanceInfo.secureVipAddress = protocol + "://" + hostName + stringPort
-		instanceInfo.SecurePort = &Port{
-			Port: port,
-			Enabled: true,
-		}
-	}else {
-		instanceInfo.VipAddress = protocol + "://" + hostName + stringPort
-		instanceInfo.Port = &Port{
-			Port: port,
-			Enabled: true,
-		}
+		instanceInfo.SecureVipAddress = appName //protocol + "://" + hostName + stringPort
+		instanceInfo.SecurePort = portj
+	} else {
+		instanceInfo.VipAddress = appName // protocol + "://" + hostName + stringPort
+		instanceInfo.Port = portj
 	}
 	instanceInfo.StatusPageUrl = protocol + "://" + hostName + stringPort + "/info"
+	instanceInfo.HealthCheckUrl = protocol + "://" + hostName + stringPort + "/health"
+	instanceInfo.HomePageUrl = protocol + "://" + hostName + stringPort + "/"
+
+	instanceInfo.Metadata = &MetaData{
+		Map: make(map[string]string),
+	}
+	instanceInfo.Metadata.Map["foo"] = "bar" //add metadata for example
+	instanceId := fmt.Sprintf("%s:%s:%d", instanceInfo.HostName, appName, instanceInfo.Port.Port)
+	instanceInfo.Metadata.Map["instanceId"] = instanceId
+	instanceInfo.InstanceId = instanceId
+
 	return instanceInfo
 }
 
 // getCancelable issues a cancelable GET request
 func (c *Client) getCancelable(endpoint string,
-cancel <-chan bool) (*RawResponse, error) {
+	cancel <-chan bool) (*RawResponse, error) {
 	logger.Debug("get %s [%s]", endpoint, c.Cluster.Leader)
 	p := endpoint
 
@@ -171,7 +197,6 @@ func (c *Client) Put(endpoint string, body []byte) (*RawResponse, error) {
 
 	req := NewRawRequest("PUT", p, body, nil)
 	resp, err := c.SendRequest(req)
-
 	if err != nil {
 		return nil, err
 	}
@@ -186,7 +211,6 @@ func (c *Client) Post(endpoint string, body []byte) (*RawResponse, error) {
 
 	req := NewRawRequest("POST", p, body, nil)
 	resp, err := c.SendRequest(req)
-
 	if err != nil {
 		return nil, err
 	}
@@ -198,7 +222,6 @@ func (c *Client) Post(endpoint string, body []byte) (*RawResponse, error) {
 func (c *Client) Delete(endpoint string) (*RawResponse, error) {
 	logger.Debug("delete %s [%s]", endpoint, c.Cluster.Leader)
 	p := endpoint
-
 	req := NewRawRequest("DELETE", p, nil, nil)
 	resp, err := c.SendRequest(req)
 
@@ -261,7 +284,7 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 	sleep := 25 * time.Millisecond
 	maxSleep := time.Second
 
-	for attempt := 0;; attempt++ {
+	for attempt := 0; ; attempt++ {
 		if attempt > 0 {
 			select {
 			case <-cancelled:
@@ -274,11 +297,11 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 			}
 		}
 
-		logger.Debug("Connecting to eureka: attempt %d for %s", attempt + 1, rr.relativePath)
+		logger.Debug("Connecting to eureka: attempt %d for %s", attempt+1, rr.relativePath)
 
 		httpPath = c.getHttpPath(false, rr.relativePath)
 
-		logger.Debug("send.request.to %s | method %s", httpPath, rr.method)
+		//		logger.Debug("send.request.to %s | method %s ", httpPath, rr.method)
 
 		req, err := func() (*http.Request, error) {
 			reqLock.Lock()
@@ -326,13 +349,13 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 		}
 
 		// if there is no error, it should receive response
-		logger.Debug("recv.response.from "+httpPath)
+		logger.Debug("recv.response.from " + httpPath)
 
 		if validHttpStatusCode[resp.StatusCode] {
 			// try to read byte code and break the loop
 			respBody, err = ioutil.ReadAll(resp.Body)
 			if err == nil {
-				logger.Debug("recv.success "+ httpPath)
+				logger.Debug("recv.success " + httpPath)
 				break
 			}
 			// ReadAll error may be caused due to cancel request
@@ -362,7 +385,7 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 				// Update cluster leader based on redirect location
 				// because it should point to the leader address
 				c.Cluster.updateLeaderFromURL(u)
-				logger.Debug("recv.response.relocate "+ u.String())
+				logger.Debug("recv.response.relocate " + u.String())
 			}
 			resp.Body.Close()
 			continue
@@ -388,9 +411,9 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 // If we have retried 2 * machine number, stop retrying.
 // If status code is InternalServerError, sleep for 200ms.
 func DefaultCheckRetry(cluster *Cluster, numReqs int, lastResp http.Response,
-err error) error {
+	err error) error {
 
-	if numReqs >= 2 * len(cluster.Machines) {
+	if numReqs >= 2*len(cluster.Machines) {
 		return newError(ErrCodeEurekaNotReachable,
 			"Tried to connect to each peer twice and failed", 0)
 	}

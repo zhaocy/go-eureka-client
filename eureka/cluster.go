@@ -11,9 +11,9 @@ type Cluster struct {
 }
 
 func NewCluster(machines []string) *Cluster {
-	// if an empty slice was sent in then just assume HTTP 4001 on localhost
+	// if an empty slice was sent in then just assume HTTP 8761 on localhost
 	if len(machines) == 0 {
-		machines = []string{"http://127.0.0.1:4001"}
+		machines = []string{"http://127.0.0.1:8761"}
 	}
 
 	// default leader and machines

@@ -12,15 +12,19 @@ import (
 	"net/url"
 	"os"
 	"path"
-	"time"
 	"strings"
+	"time"
 )
 
 const (
 	defaultBufferSize = 10
-	UP = "UP"
-	DOWN = "DOWN"
-	STARTING = "STARTING"
+	UP                = "UP"
+	DOWN              = "DOWN"
+	STARTING          = "STARTING"
+	//
+	ADDED    = "ADDED"    // Added in the discovery server
+	MODIFIED = "MODIFIED" // Changed in the discovery server
+	DELETED  = "DELETED"
 )
 
 type Config struct {
@@ -49,8 +53,8 @@ type Client struct {
 	// Argument numReqs is the number of http.Requests that have been made so far.
 	// Argument lastResp is the http.Responses from the last request.
 	// Argument err is the reason of the failure.
-	CheckRetry  func(cluster *Cluster, numReqs int,
-	lastResp http.Response, err error) error
+	CheckRetry func(cluster *Cluster, numReqs int,
+		lastResp http.Response, err error) error
 }
 
 // NewClient create a basic client that is configured to be used
@@ -70,11 +74,22 @@ func NewClient(machines []string) *Client {
 	return client
 }
 
+func NewClientByConfig(machines []string, config Config) *Client {
+
+	client := &Client{
+		Cluster: NewCluster(machines),
+		Config:  config,
+	}
+
+	client.initHTTPClient()
+	return client
+}
+
 // NewTLSClient create a basic client with TLS configuration
 func NewTLSClient(machines []string, cert string, key string, caCerts []string) (*Client, error) {
 	// overwrite the default machine to use https
 	if len(machines) == 0 {
-		machines = []string{"https://127.0.0.1:4001"}
+		machines = []string{"https://127.0.0.1:8761"}
 	}
 
 	config := Config{

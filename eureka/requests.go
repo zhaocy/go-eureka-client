@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -186,13 +187,14 @@ func (c *Client) getCancelable(endpoint string,
 
 // get issues a GET request
 func (c *Client) Get(endpoint string) (*RawResponse, error) {
+	logger.Debug("get %s%s", c.Cluster.Leader, endpoint)
 	return c.getCancelable(endpoint, nil)
 }
 
 // put issues a PUT request
 func (c *Client) Put(endpoint string, body []byte) (*RawResponse, error) {
 
-	logger.Debug("put %s, %s, [%s]", endpoint, body, c.Cluster.Leader)
+	logger.Debug("put %s%s, [%s]", c.Cluster.Leader, endpoint, body)
 	p := endpoint
 
 	req := NewRawRequest("PUT", p, body, nil)
@@ -206,7 +208,7 @@ func (c *Client) Put(endpoint string, body []byte) (*RawResponse, error) {
 
 // post issues a POST request
 func (c *Client) Post(endpoint string, body []byte) (*RawResponse, error) {
-	logger.Debug("post %s, %s, [%s]", endpoint, body, c.Cluster.Leader)
+	logger.Debug("post %s%s, [%s]", c.Cluster.Leader, endpoint, body)
 	p := endpoint
 
 	req := NewRawRequest("POST", p, body, nil)
@@ -220,7 +222,7 @@ func (c *Client) Post(endpoint string, body []byte) (*RawResponse, error) {
 
 // delete issues a DELETE request
 func (c *Client) Delete(endpoint string) (*RawResponse, error) {
-	logger.Debug("delete %s [%s]", endpoint, c.Cluster.Leader)
+	logger.Debug("delete %s%s", c.Cluster.Leader, endpoint)
 	p := endpoint
 	req := NewRawRequest("DELETE", p, nil, nil)
 	resp, err := c.SendRequest(req)
@@ -228,7 +230,6 @@ func (c *Client) Delete(endpoint string) (*RawResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return resp, nil
 }
 
@@ -311,8 +312,7 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 				return nil, err
 			}
 
-			req.Header.Set("Content-Type",
-				"application/json")
+			req.Header.Set("Content-Type", "application/json")
 			return req, nil
 		}()
 
@@ -355,7 +355,7 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 			// try to read byte code and break the loop
 			respBody, err = ioutil.ReadAll(resp.Body)
 			if err == nil {
-				logger.Debug("recv.success " + httpPath)
+				logger.Debug("recv.success " + httpPath + " " + resp.Status)
 				break
 			}
 			// ReadAll error may be caused due to cancel request
@@ -436,7 +436,8 @@ func (c *Client) getHttpPath(random bool, s ...string) string {
 		machine = c.Cluster.Leader
 	}
 
-	fullPath := machine
+	fullPath := strings.TrimRight(machine, "/")
+
 	for _, seg := range s {
 		fullPath += "/" + seg
 	}

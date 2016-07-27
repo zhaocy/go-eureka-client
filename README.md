@@ -1,5 +1,9 @@
 Go Eureka Client
 ================
+[![Build Status](https://travis-ci.org/tietang/go-eureka-client.svg?branch=master)](https://travis-ci.org/tietang/go-eureka-client)
+
+
+
 
 Based on code from https://github.com/bryanstephens/go-eureka-client .
 

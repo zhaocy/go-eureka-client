@@ -10,10 +10,11 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"path"
 	"strings"
 	"time"
+
+	"github.com/tietang/go-eureka-client/eureka/config"
 )
 
 const (
@@ -33,6 +34,7 @@ type Config struct {
 	CaCertFile  []string      `json:"caCertFiles"`
 	DialTimeout time.Duration `json:"timeout"`
 	Consistency string        `json:"consistency"`
+	//
 }
 
 type Client struct {
@@ -41,6 +43,11 @@ type Client struct {
 	httpClient  *http.Client
 	persistence io.Writer
 	cURLch      chan string
+	//
+	Applications   *Applications
+	InstanceInfo   *InstanceInfo
+	ClientConfig   *config.EurekaClientConfig
+	InstanceConfig *config.EurekaInstanceConfig
 	// CheckRetry can be used to control the policy for failed requests
 	// and modify the cluster if needed.
 	// The client calls it before sending requests again, and
@@ -55,117 +62,6 @@ type Client struct {
 	// Argument err is the reason of the failure.
 	CheckRetry func(cluster *Cluster, numReqs int,
 		lastResp http.Response, err error) error
-}
-
-// NewClient create a basic client that is configured to be used
-// with the given machine list.
-func NewClient(machines []string) *Client {
-	config := Config{
-		// default timeout is one second
-		DialTimeout: time.Second,
-	}
-
-	client := &Client{
-		Cluster: NewCluster(machines),
-		Config:  config,
-	}
-
-	client.initHTTPClient()
-	return client
-}
-
-func NewClientByConfig(machines []string, config Config) *Client {
-
-	client := &Client{
-		Cluster: NewCluster(machines),
-		Config:  config,
-	}
-
-	client.initHTTPClient()
-	return client
-}
-
-// NewTLSClient create a basic client with TLS configuration
-func NewTLSClient(machines []string, cert string, key string, caCerts []string) (*Client, error) {
-	// overwrite the default machine to use https
-	if len(machines) == 0 {
-		machines = []string{"https://127.0.0.1:8761"}
-	}
-
-	config := Config{
-		// default timeout is one second
-		DialTimeout: time.Second,
-		CertFile:    cert,
-		KeyFile:     key,
-		CaCertFile:  make([]string, 0),
-	}
-
-	client := &Client{
-		Cluster: NewCluster(machines),
-		Config:  config,
-	}
-
-	err := client.initHTTPSClient(cert, key)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, caCert := range caCerts {
-		if err := client.AddRootCA(caCert); err != nil {
-			return nil, err
-		}
-	}
-	return client, nil
-}
-
-// NewClientFromFile creates a client from a given file path.
-// The given file is expected to use the JSON format.
-func NewClientFromFile(fpath string) (*Client, error) {
-	fi, err := os.Open(fpath)
-	if err != nil {
-		return nil, err
-	}
-
-	defer func() {
-		if err := fi.Close(); err != nil {
-			panic(err)
-		}
-	}()
-
-	return NewClientFromReader(fi)
-}
-
-// NewClientFromReader creates a Client configured from a given reader.
-// The configuration is expected to use the JSON format.
-func NewClientFromReader(reader io.Reader) (*Client, error) {
-	c := new(Client)
-
-	b, err := ioutil.ReadAll(reader)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(b, c)
-	if err != nil {
-		return nil, err
-	}
-	if c.Config.CertFile == "" {
-		c.initHTTPClient()
-	} else {
-		err = c.initHTTPSClient(c.Config.CertFile, c.Config.KeyFile)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	for _, caCert := range c.Config.CaCertFile {
-		if err := c.AddRootCA(caCert); err != nil {
-			return nil, err
-		}
-	}
-
-	return c, nil
 }
 
 // Override the Client's HTTP Transport object

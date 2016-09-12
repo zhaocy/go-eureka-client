@@ -1,34 +1,40 @@
 package config
 
-import (
-	"eureka"
-	"strings"
-)
+import "strings"
 
 const (
 	EurekaAcceptFull    = "full"
 	EurekaAcceptCompact = "compact"
 	DEFAULT_EUREKA_URL  = "http://localhost:8761/eureka/"
 	DEFAULT_EUREKA_ZONE = "defaultZone"
+	UP                  = "UP"
+	DOWN                = "DOWN"
+	STARTING            = "STARTING"
 )
 
-type Config struct {
-	Eureka Eureka
+type ApplicationConfig struct {
+	Name    string `yaml:"name" json:"name" xml:"name"`
+	Port    int    `yaml:"port" json:"port" xml:"port"`
+	Secured bool   `yaml:"secured" json:"secured" xml:"secured"`
+}
+type EurekaConfig struct {
+	Eureka      Eureka
+	Application ApplicationConfig `yaml:"application" json:"application" xml:"application"`
 }
 type Eureka struct {
 	Client   EurekaClientConfig
 	Instance EurekaInstanceConfig
 }
 type EurekaTransportConfig struct {
-	SessionedClientReconnectIntervalSeconds           int
-	RetryableClientQuarantineRefreshPercentage        float64
-	BootstrapResolverRefreshIntervalSeconds           int
-	ApplicationsResolverDataStalenessThresholdSeconds int
-	AsyncResolverRefreshIntervalMs                    int
-	AsyncResolverWarmUpTimeoutMs                      int
-	AsyncExecutorThreadPoolSize                       int
-	ReadClusterVip                                    string
-	BootstrapResolverForQuery                         bool
+	SessionedClientReconnectIntervalSeconds           int     `yaml:"sessionedClientReconnectIntervalSeconds" json:"sessionedClientReconnectIntervalSeconds" xml:"sessionedClientReconnectIntervalSeconds"`
+	RetryableClientQuarantineRefreshPercentage        float64 `yaml:"retryableClientQuarantineRefreshPercentage" json:"retryableClientQuarantineRefreshPercentage" xml:"retryableClientQuarantineRefreshPercentage"`
+	BootstrapResolverRefreshIntervalSeconds           int     `yaml:"bootstrapResolverRefreshIntervalSeconds" json:"bootstrapResolverRefreshIntervalSeconds" xml:"bootstrapResolverRefreshIntervalSeconds"`
+	ApplicationsResolverDataStalenessThresholdSeconds int     `yaml:"applicationsResolverDataStalenessThresholdSeconds" json:"applicationsResolverDataStalenessThresholdSeconds" xml:"applicationsResolverDataStalenessThresholdSeconds"`
+	AsyncResolverRefreshIntervalMs                    int     `yaml:"asyncResolverRefreshIntervalMs" json:"asyncResolverRefreshIntervalMs" xml:"asyncResolverRefreshIntervalMs"`
+	AsyncResolverWarmUpTimeoutMs                      int     `yaml:"asyncResolverWarmUpTimeoutMs" json:"asyncResolverWarmUpTimeoutMs" xml:"asyncResolverWarmUpTimeoutMs"`
+	AsyncExecutorThreadPoolSize                       int     `yaml:"asyncExecutorThreadPoolSize" json:"asyncExecutorThreadPoolSize" xml:"asyncExecutorThreadPoolSize"`
+	ReadClusterVip                                    string  `yaml:"readClusterVip" json:"readClusterVip" xml:"readClusterVip"`
+	BootstrapResolverForQuery                         bool    `yaml:"bootstrapResolverForQuery" json:"bootstrapResolverForQuery" xml:"bootstrapResolverForQuery"`
 }
 
 func NewEurekaTransportConfig() EurekaTransportConfig {
@@ -45,33 +51,33 @@ func NewEurekaTransportConfig() EurekaTransportConfig {
 }
 
 type EurekaInstanceConfig struct {
-	Appname                          string
-	AppGroupName                     string
-	InstanceEnabledOnit              bool
-	NonSecurePort                    int
-	SecurePort                       int
-	NonSecurePortEnabled             bool
-	SecurePortEnabled                bool
-	LeaseRenewalIntervalInSeconds    uint
-	LeaseExpirationDurationInSeconds int
-	VirtualHostName                  string
-	InstanceId                       string
-	SecureVirtualHostName            string
-	ASGName                          string
-	DataCenterInfo                   eureka.DataCenterInfo
-	IpAddress                        string
-	StatusPageUrlPath                string
-	StatusPageUrl                    string
-	HomePageUrlPath                  string
-	HomePageUrl                      string
-	HealthCheckUrlPath               string
-	HealthCheckUrl                   string
-	SecureHealthCheckUrl             string
-	Namespace                        string
-	Hostname                         string
-	PreferIpAddress                  bool
-	InitialStatus                    string
-	MetadataMap                      map[string]string
+	Appname                          string `yaml:"appname" json:"appname" xml:"appname"`
+	AppGroupName                     string `yaml:"appGroupName" json:"appGroupName" xml:"appGroupName"`
+	InstanceEnabledOnit              bool   `yaml:"instanceEnabledOnit" json:"instanceEnabledOnit" xml:"instanceEnabledOnit"`
+	NonSecurePort                    int    `yaml:"nonSecurePort" json:"nonSecurePort" xml:"nonSecurePort"`
+	SecurePort                       int    `yaml:"securePort" json:"securePort" xml:"securePort"`
+	NonSecurePortEnabled             bool   `yaml:"nonSecurePortEnabled" json:"nonSecurePortEnabled" xml:"nonSecurePortEnabled"`
+	SecurePortEnabled                bool   `yaml:"securePortEnabled" json:"securePortEnabled" xml:"securePortEnabled"`
+	LeaseRenewalIntervalInSeconds    uint   `yaml:"leaseRenewalIntervalInSeconds" json:"leaseRenewalIntervalInSeconds" xml:"leaseRenewalIntervalInSeconds"`
+	LeaseExpirationDurationInSeconds int    `yaml:"leaseExpirationDurationInSeconds" json:"leaseExpirationDurationInSeconds" xml:"leaseExpirationDurationInSeconds"`
+	VirtualHostName                  string `yaml:"virtualHostName" json:"virtualHostName" xml:"virtualHostName"`
+	InstanceId                       string `yaml:"instanceId" json:"instanceId" xml:"instanceId"`
+	SecureVirtualHostName            string `yaml:"secureVirtualHostName" json:"secureVirtualHostName" xml:"secureVirtualHostName"`
+	ASGName                          string `yaml:"aSGName" json:"aSGName" xml:"aSGName"`
+	//	DataCenterInfo                   DataCenterInfoConfig `yaml:"dataCenterInfo" json:"dataCenterInfo" xml:"dataCenterInfo"`
+	IpAddress            string            `yaml:"ipAddress" json:"ipAddress" xml:"ipAddress"`
+	StatusPageUrlPath    string            `yaml:"statusPageUrlPath" json:"statusPageUrlPath" xml:"statusPageUrlPath"`
+	StatusPageUrl        string            `yaml:"statusPageUrl" json:"statusPageUrl" xml:"statusPageUrl"`
+	HomePageUrlPath      string            `yaml:"homePageUrlPath" json:"homePageUrlPath" xml:"homePageUrlPath"`
+	HomePageUrl          string            `yaml:"homePageUrl" json:"homePageUrl" xml:"homePageUrl"`
+	HealthCheckUrlPath   string            `yaml:"healthCheckUrlPath" json:"healthCheckUrlPath" xml:"healthCheckUrlPath"`
+	HealthCheckUrl       string            `yaml:"healthCheckUrl" json:"healthCheckUrl" xml:"healthCheckUrl"`
+	SecureHealthCheckUrl string            `yaml:"secureHealthCheckUrl" json:"secureHealthCheckUrl" xml:"secureHealthCheckUrl"`
+	Namespace            string            `yaml:"namespace" json:"namespace" xml:"namespace"`
+	Hostname             string            `yaml:"hostname" json:"hostname" xml:"hostname"`
+	PreferIpAddress      bool              `yaml:"preferIpAddress" json:"preferIpAddress" xml:"preferIpAddress"`
+	InitialStatus        string            `yaml:"initialStatus" json:"initialStatus" xml:"initialStatus"`
+	MetadataMap          map[string]string `yaml:"metadataMap" json:"metadataMap" xml:"metadataMap"`
 }
 
 func NewEurekaInstanceConfig() EurekaInstanceConfig {
@@ -87,7 +93,7 @@ func NewEurekaInstanceConfig() EurekaInstanceConfig {
 		HealthCheckUrlPath:               "/health",
 		Namespace:                        "eureka",
 		PreferIpAddress:                  true,
-		InitialStatus:                    eureka.UP,
+		InitialStatus:                    UP,
 	}
 	ins.VirtualHostName = ins.Appname
 
@@ -95,44 +101,44 @@ func NewEurekaInstanceConfig() EurekaInstanceConfig {
 }
 
 type EurekaClientConfig struct {
-	Transport                                     EurekaTransportConfig
-	RegistryFetchIntervalSeconds                  int
-	InstanceInfoReplicationIntervalSeconds        int
-	InitialInstanceInfoReplicationIntervalSeconds int
-	EurekaServiceUrlPollIntervalSeconds           int
-	EurekaServerReadTimeoutSeconds                int
-	EurekaServerConnectTimeoutSeconds             int
-	BackupRegistryImpl                            string
-	EurekaServerTotalConnections                  int
-	EurekaServerTotalConnectionsPerHost           int
-	EurekaServerURLContext                        string
-	EurekaServerPort                              string
-	EurekaServerDNSName                           string
-	Region                                        string
-	EurekaConnectionIdleTimeoutSeconds            int
-	RegistryRefreshSingleVipAddress               string
-	HeartbeatExecutorThreadPoolSize               int
-	HeartbeatExecutorExponentialBackOffBound      int
-	CacheRefreshExecutorThreadPoolSize            int
-	CacheRefreshExecutorExponentialBackOffBound   int
-	GZipContent                                   bool
-	UseDnsForFetchingServiceUrls                  bool
-	RegisterWithEureka                            bool
-	PreferSameZoneEureka                          bool
-	LogDeltaDiff                                  bool
-	DisableDelta                                  bool
-	FetchRemoteRegionsRegistry                    string
-	FilterOnlyUpInstances                         bool
-	FetchRegistry                                 bool
-	DollarReplacement                             string
-	EscapeCharReplacement                         string
-	AllowRedirects                                bool
-	OnDemandUpdateStatusChange                    bool
-	EncoderName                                   string
-	DecoderName                                   string
-	ClientDataAccept                              string
-	AvailabilityZones                             map[string]string
-	ServiceUrl                                    map[string]string
+	Transport                                     EurekaTransportConfig `yaml:"transport" json:"transport" xml:"transport"`
+	RegistryFetchIntervalSeconds                  int                   `yaml:"registryFetchIntervalSeconds" json:"registryFetchIntervalSeconds" xml:"registryFetchIntervalSeconds"`
+	InstanceInfoReplicationIntervalSeconds        int                   `yaml:"instanceInfoReplicationIntervalSeconds" json:"instanceInfoReplicationIntervalSeconds" xml:"instanceInfoReplicationIntervalSeconds"`
+	InitialInstanceInfoReplicationIntervalSeconds int                   `yaml:"initialInstanceInfoReplicationIntervalSeconds" json:"initialInstanceInfoReplicationIntervalSeconds" xml:"initialInstanceInfoReplicationIntervalSeconds"`
+	EurekaServiceUrlPollIntervalSeconds           int                   `yaml:"eurekaServiceUrlPollIntervalSeconds" json:"eurekaServiceUrlPollIntervalSeconds" xml:"eurekaServiceUrlPollIntervalSeconds"`
+	EurekaServerReadTimeoutSeconds                int                   `yaml:"eurekaServerReadTimeoutSeconds" json:"eurekaServerReadTimeoutSeconds" xml:"eurekaServerReadTimeoutSeconds"`
+	EurekaServerConnectTimeoutSeconds             int                   `yaml:"eurekaServerConnectTimeoutSeconds" json:"eurekaServerConnectTimeoutSeconds" xml:"eurekaServerConnectTimeoutSeconds"`
+	BackupRegistryImpl                            string                `yaml:"backupRegistryImpl" json:"backupRegistryImpl" xml:"backupRegistryImpl"`
+	EurekaServerTotalConnections                  int                   `yaml:"eurekaServerTotalConnections" json:"eurekaServerTotalConnections" xml:"eurekaServerTotalConnections"`
+	EurekaServerTotalConnectionsPerHost           int                   `yaml:"eurekaServerTotalConnectionsPerHost" json:"eurekaServerTotalConnectionsPerHost" xml:"eurekaServerTotalConnectionsPerHost"`
+	EurekaServerURLContext                        string                `yaml:"eurekaServerURLContext" json:"eurekaServerURLContext" xml:"eurekaServerURLContext"`
+	EurekaServerPort                              string                `yaml:"eurekaServerPort" json:"eurekaServerPort" xml:"eurekaServerPort"`
+	EurekaServerDNSName                           string                `yaml:"eurekaServerDNSName" json:"eurekaServerDNSName" xml:"eurekaServerDNSName"`
+	Region                                        string                `yaml:"region" json:"region" xml:"region"`
+	EurekaConnectionIdleTimeoutSeconds            int                   `yaml:"eurekaConnectionIdleTimeoutSeconds" json:"eurekaConnectionIdleTimeoutSeconds" xml:"eurekaConnectionIdleTimeoutSeconds"`
+	RegistryRefreshSingleVipAddress               string                `yaml:"registryRefreshSingleVipAddress" json:"registryRefreshSingleVipAddress" xml:"registryRefreshSingleVipAddress"`
+	HeartbeatExecutorThreadPoolSize               int                   `yaml:"heartbeatExecutorThreadPoolSize" json:"heartbeatExecutorThreadPoolSize" xml:"heartbeatExecutorThreadPoolSize"`
+	HeartbeatExecutorExponentialBackOffBound      int                   `yaml:"heartbeatExecutorExponentialBackOffBound" json:"heartbeatExecutorExponentialBackOffBound" xml:"heartbeatExecutorExponentialBackOffBound"`
+	CacheRefreshExecutorThreadPoolSize            int                   `yaml:"cacheRefreshExecutorThreadPoolSize" json:"cacheRefreshExecutorThreadPoolSize" xml:"cacheRefreshExecutorThreadPoolSize"`
+	CacheRefreshExecutorExponentialBackOffBound   int                   `yaml:"cacheRefreshExecutorExponentialBackOffBound" json:"cacheRefreshExecutorExponentialBackOffBound" xml:"cacheRefreshExecutorExponentialBackOffBound"`
+	GZipContent                                   bool                  `yaml:"gZipContent" json:"gZipContent" xml:"gZipContent"`
+	UseDnsForFetchingServiceUrls                  bool                  `yaml:"useDnsForFetchingServiceUrls" json:"useDnsForFetchingServiceUrls" xml:"useDnsForFetchingServiceUrls"`
+	RegisterWithEureka                            bool                  `yaml:"registerWithEureka" json:"registerWithEureka" xml:"registerWithEureka"`
+	PreferSameZoneEureka                          bool                  `yaml:"preferSameZoneEureka" json:"preferSameZoneEureka" xml:"preferSameZoneEureka"`
+	LogDeltaDiff                                  bool                  `yaml:"logDeltaDiff" json:"logDeltaDiff" xml:"logDeltaDiff"`
+	DisableDelta                                  bool                  `yaml:"disableDelta" json:"disableDelta" xml:"disableDelta"`
+	FetchRemoteRegionsRegistry                    string                `yaml:"fetchRemoteRegionsRegistry" json:"fetchRemoteRegionsRegistry" xml:"fetchRemoteRegionsRegistry"`
+	FilterOnlyUpInstances                         bool                  `yaml:"filterOnlyUpInstances" json:"filterOnlyUpInstances" xml:"filterOnlyUpInstances"`
+	FetchRegistry                                 bool                  `yaml:"fetchRegistry" json:"fetchRegistry" xml:"fetchRegistry"`
+	DollarReplacement                             string                `yaml:"dollarReplacement" json:"dollarReplacement" xml:"dollarReplacement"`
+	EscapeCharReplacement                         string                `yaml:"escapeCharReplacement" json:"escapeCharReplacement" xml:"escapeCharReplacement"`
+	AllowRedirects                                bool                  `yaml:"allowRedirects" json:"allowRedirects" xml:"allowRedirects"`
+	OnDemandUpdateStatusChange                    bool                  `yaml:"onDemandUpdateStatusChange" json:"onDemandUpdateStatusChange" xml:"onDemandUpdateStatusChange"`
+	EncoderName                                   string                `yaml:"encoderName" json:"encoderName" xml:"encoderName"`
+	DecoderName                                   string                `yaml:"decoderName" json:"decoderName" xml:"decoderName"`
+	ClientDataAccept                              string                `yaml:"clientDataAccept" json:"clientDataAccept" xml:"clientDataAccept"`
+	AvailabilityZones                             map[string]string     `yaml:"availabilityZones" json:"availabilityZones" xml:"availabilityZones"`
+	ServiceUrl                                    map[string]string     `yaml:"serviceUrl" json:"serviceUrl" xml:"serviceUrl"`
 }
 
 func NewEurekaClientConfig() EurekaClientConfig {
@@ -169,7 +175,7 @@ func NewEurekaClientConfig() EurekaClientConfig {
 	}
 }
 
-func (e *EurekaClientConfig) getAvailabilityZones(region string) []string {
+func (e *EurekaClientConfig) GetAvailabilityZones(region string) []string {
 	value, ok := e.AvailabilityZones[region]
 
 	if !ok {
@@ -179,7 +185,7 @@ func (e *EurekaClientConfig) getAvailabilityZones(region string) []string {
 	return strings.Split(value, ",")
 }
 
-func (e *EurekaClientConfig) getEurekaServerServiceUrls(myZone string) []string {
+func (e *EurekaClientConfig) GetEurekaServerServiceUrls(myZone string) []string {
 	serviceUrls, ok := e.ServiceUrl[myZone]
 	if !ok {
 		serviceUrls = e.ServiceUrl[DEFAULT_EUREKA_ZONE]

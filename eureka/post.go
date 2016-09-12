@@ -2,8 +2,11 @@ package eureka
 
 import (
 	"encoding/json"
+	"net/http"
 	"strings"
+
 	log "github.com/Sirupsen/logrus"
+	"github.com/tietang/go-utils/errs"
 )
 
 func (c *Client) RegisterInstance(appName string, instanceInfo *InstanceInfo) error {
@@ -20,10 +23,14 @@ func (c *Client) RegisterInstance(appName string, instanceInfo *InstanceInfo) er
 	res, err := c.Post(path, body)
 	if res != nil {
 		log.WithFields(log.Fields{
-			"path":path,
-			"status":res.StatusCode,
-			"body":string(body),
+			"path":   path,
+			"status": res.StatusCode,
+			"body":   string(body),
 		}).Info("RegisterInstance ")
+	}
+
+	if res.StatusCode != http.StatusNoContent {
+		return errs.NewError("unRegisterInstance", res.StatusCode)
 	}
 	return err
 }

@@ -42,7 +42,7 @@ func (c *Client) run() {
 					if errForReg == nil {
 						isInit = true
 					}
-					err := c.UpdateStatus(ins.AppName, ins.InstanceId, UP)
+					err := c.UpdateStatus(ins.AppName, ins.InstanceId, StatusUp)
 					if err == nil {
 						isInit = true
 					}

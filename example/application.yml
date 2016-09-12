@@ -1,12 +1,6 @@
 
-
-
 application:
-<<<<<<< HEAD
   name: go-example
-=======
-  name: turbine
->>>>>>> ab98682a801b414ad08e5026070ec547843ae65a
   port: 19002
 
 eureka:
@@ -22,10 +16,5 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-<<<<<<< HEAD
       #defaultZone: http://localhost:8761/eureka/
-      defaultZone: http://dev.discovery.shishike.com/eureka/
-=======
-      defaultZone: http://localhost:8761/eureka/
-      #defaultZone: http://dev.discovery.shishike.com/eureka/
->>>>>>> ab98682a801b414ad08e5026070ec547843ae65a
+      defaultZone: http://172.16.1.248:8761/eureka/

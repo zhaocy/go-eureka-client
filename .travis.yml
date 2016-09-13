@@ -8,3 +8,4 @@ go:
 install:
   - go get github.com/ArthurHlt/gominlog
   - go get github.com/tietang/go-utils
+  - go get github.com/Sirupsen/logrus

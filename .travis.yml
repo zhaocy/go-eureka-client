@@ -2,7 +2,6 @@ language: go
 go:
   - 1.5.4
   - 1.6.2
-  - 1.7.0
   - 1.7.1
 install:
   - go get github.com/ArthurHlt/gominlog

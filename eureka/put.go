@@ -3,7 +3,7 @@ package eureka
 import (
 	"strings"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 func (c *Client) SendHeartbeat(appId, instanceId string) error {

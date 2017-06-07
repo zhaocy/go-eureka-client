@@ -1,7 +1,7 @@
 package eureka
 
 import "strings"
-import log "github.com/Sirupsen/logrus"
+import log "github.com/sirupsen/logrus"
 
 func (c *Client) UnregisterInstance(appId, instanceId string) error {
 	values := []string{"apps", appId, instanceId}

@@ -135,5 +135,9 @@ func (c *Discovery) getEurekaServerUrl() string {
         panic(errs.NilPointError("eureka url is empty"))
     }
     index := int(ct) % size
-    return c.eurekaUrl[index]
+    url := c.eurekaUrl[index]
+    //if strings.LastIndex(url,"/")>-1{
+    url = strings.TrimSuffix(url, "/")
+    //}
+    return url
 }

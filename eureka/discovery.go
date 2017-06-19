@@ -1,6 +1,5 @@
 package eureka
 
-
 import (
     "encoding/xml"
     "fmt"
@@ -16,11 +15,25 @@ type Discovery struct {
     apps      *Applications
     AppNames  map[string]string
     eurekaUrl []string
+    callbacks []func(*Applications)
     ct        uint64
 }
 
 func NewDiscovery(eurekaUrl []string) *Discovery {
-    return &Discovery{eurekaUrl: eurekaUrl}
+    return &Discovery{eurekaUrl: eurekaUrl, callbacks: make([]func(*Applications), 0)}
+}
+
+func (d *Discovery) AddCallback(callback func(*Applications)) {
+    d.callbacks = append(d.callbacks, callback)
+
+}
+
+func (d *Discovery) execCallbacks(apps *Applications) {
+    if len(d.callbacks) > 0 {
+        for _, c := range d.callbacks {
+            go c(apps)
+        }
+    }
 }
 
 func (d *Discovery) ScheduleAtFixedRate(second time.Duration) {
@@ -42,6 +55,7 @@ func (d *Discovery) run() {
     apps, err := d.GetApplications()
     if err == nil {
         d.apps = apps
+        d.execCallbacks(apps)
     } else {
         fmt.Println(err)
     }

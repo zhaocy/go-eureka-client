@@ -53,7 +53,7 @@ func (d *Discovery) runTask(second time.Duration) {
 
 func (d *Discovery) run() {
     apps, err := d.GetApplications()
-    if err == nil {
+    if err == nil || apps != nil {
         d.apps = apps
         d.execCallbacks(apps)
     } else {
@@ -72,6 +72,10 @@ func (c *Discovery) GetApps() *Applications {
 }
 
 func (c *Discovery) GetApp(name string) *Application {
+    if c.apps == nil {
+        fmt.Println("Applications is nil")
+        return nil
+    }
     for _, app := range c.apps.Applications {
         if strings.ToLower(app.Name) == strings.ToLower(name) {
             return &app

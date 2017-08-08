@@ -58,7 +58,6 @@ func (d *Discovery) run() {
 		d.execCallbacks(apps)
 	} else {
 		log.Error(err)
-		log.Error(err)
 	}
 }
 

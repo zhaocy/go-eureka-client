@@ -53,14 +53,13 @@ func (d *Discovery) runTask(second time.Duration) {
 }
 
 func (d *Discovery) run() {
-    apps, err := d.GetApplications()
-    if err == nil || apps != nil {
-        d.apps = apps
-        d.execCallbacks(apps)
-    } else {
-        log.Error(err)
-        log.Error(err)
-    }
+	apps, err := d.GetApplications()
+	if err == nil || apps != nil {
+		d.apps = apps
+		d.execCallbacks(apps)
+	} else {
+		log.Error(err)
+	}
 }
 
 func (c *Discovery) GetApps() *Applications {

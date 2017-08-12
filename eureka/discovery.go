@@ -159,3 +159,10 @@ func (c *Discovery) getEurekaServerUrl() string {
 	//}
 	return url
 }
+
+func (c *Discovery) Health() (bool, string) {
+
+	ok, desc := true, "ok"
+
+	return ok, desc
+}

@@ -190,10 +190,3 @@ func (d *Discovery) Health() (bool, string) {
     return ok, desc
 
 }
-
-func (c *Discovery) Health() (bool, string) {
-
-	ok, desc := true, "ok"
-
-	return ok, desc
-}

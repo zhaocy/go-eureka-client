@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func main() {
+func main_test() {
 
 	file, _ := os.Getwd()
 	fmt.Println("current path:", file)

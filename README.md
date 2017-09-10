@@ -1,8 +1,9 @@
 Go Eureka Client
 ================
 [![Build Status](https://travis-ci.org/tietang/go-eureka-client.svg?branch=master)](https://travis-ci.org/tietang/go-eureka-client)
-
-
+[![GoDoc Documentation](http://godoc.org/github.com/tietang/go-eureka-client?status.png)](<https://godoc.org/github.com/tietang/go-eureka-client>)
+[![Sourcegraph](https://sourcegraph.com/github.com/tietang/go-eureka-client/-/badge.svg)](https://sourcegraph.com/github.com/tietang/go-eureka-client?badge)
+[![CircleCI](https://circleci.com/gh/tietang/go-eureka-client.svg?style=svg)](https://circleci.com/gh/tietang/go-eureka-client)
 
 
 Based on code from https://github.com/bryanstephens/go-eureka-client .

@@ -1,10 +1,10 @@
 language: go
 go:
-  - 1.5.4
-  - 1.6.2
-  - 1.7.1
+  - 1.8.x
 install:
   - go get github.com/ArthurHlt/gominlog
   - go get github.com/tietang/go-utils
   - go get github.com/sirupsen/logrus
   - go get gopkg.in/yaml.v2
+  - go get github.com/tietang/props
+  - go get github.com/smartystreets/goconvey/convey

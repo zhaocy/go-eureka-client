@@ -50,7 +50,7 @@ func CreateDataCenterInfo(dataCenterInfo *DataCenterInfo) *DataCenterInfo {
     return dataCenterInfo
 }
 
-func CreateInstanceInfo(config config.EurekaConfig) *InstanceInfo {
+func CreateInstanceInfo(config *config.EurekaConfig) *InstanceInfo {
     instanceConfig := config.Eureka.Instance
     appConfig := config.Application
     ins := createInstanceInfo(instanceConfig, appConfig)
@@ -74,6 +74,7 @@ func createInstanceInfo(config config.EurekaInstanceConfig, appConfig config.App
 
     ip, _ := utils.GetExternalIP()
     hostName := ip
+
     appName := defaultFileName()
 
     if appConfig.Name != "" {
@@ -160,7 +161,7 @@ func CreateEurekaClientByYaml(fileName string) *Client {
 
     cfg := file + "/" + fileName //"/application.yml"
 
-    c := config.EurekaConfig{
+    c := &config.EurekaConfig{
         Eureka: config.Eureka{
             Client:   config.NewEurekaClientConfig(),
             Instance: config.NewEurekaInstanceConfig(),
@@ -170,7 +171,7 @@ func CreateEurekaClientByYaml(fileName string) *Client {
     if exists(cfg) {
 
         data, err := ReadFile(cfg)
-        err = yaml.Unmarshal([]byte(data), &c)
+        err = yaml.Unmarshal([]byte(data), c)
         if err != nil {
             fmt.Println("error: %v", err)
         }
@@ -178,9 +179,17 @@ func CreateEurekaClientByYaml(fileName string) *Client {
         fmt.Println("error: file %s not exists.", cfg)
     }
 
+    client := newClientbyConfig(c)
+    return client
+}
+
+func newClientbyConfig(c *config.EurekaConfig) *Client {
     ins := CreateInstanceInfo(c)
     client := CreateEurekaClient(c.Eureka.Client)
     client.InstanceInfo = ins
+    client.ClientConfig = &c.Eureka.Client
+    client.InstanceConfig = &c.Eureka.Instance
+    client.InstanceConfig.Appname = c.Application.Name
     return client
 }
 
@@ -212,9 +221,7 @@ func NewClient(conf props.ConfigSource) *Client {
     //
     //client.initHTTPClient()
     //
-    ins := CreateInstanceInfo(*c)
-    client := CreateEurekaClient(c.Eureka.Client)
-    client.InstanceInfo = ins
+    client := newClientbyConfig(c)
     return client
 }
 

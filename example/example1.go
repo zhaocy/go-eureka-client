@@ -10,7 +10,7 @@ import (
 	"syscall"
 )
 
-func main() {
+func main_yaml() {
 	client := eureka.CreateEurekaClientByYaml("application.yml")
 	data, _ := xml.Marshal(client.InstanceInfo)
 	println(string(data))

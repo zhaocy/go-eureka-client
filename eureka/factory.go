@@ -72,8 +72,8 @@ func createInstanceInfo(config config.EurekaInstanceConfig, appConfig config.App
     leaseInfo := NewLeaseInfo(config.LeaseRenewalIntervalInSeconds)
     leaseInfo.DurationInSecs = config.LeaseExpirationDurationInSeconds
 
-    ip, _ := utils.GetExternalIP()
-    hostName := ip
+    ips, _ := utils.GetExternalIPs()
+    hostName := ips[0]
 
     appName := defaultFileName()
 
@@ -86,7 +86,7 @@ func createInstanceInfo(config config.EurekaInstanceConfig, appConfig config.App
         App:            appName,
         AppName:        appName,
         AppGroupName:   config.AppGroupName,
-        IpAddr:         ip,
+        IpAddr:         ips[0],
         Status:         StatusStarting,
         DataCenterInfo: dataCenterInfo,
         LeaseInfo:      leaseInfo,

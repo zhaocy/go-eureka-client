@@ -15,7 +15,7 @@ import (
 
     "github.com/tietang/go-eureka-client/eureka/config"
     "github.com/tietang/go-utils"
-    "github.com/tietang/props"
+    "github.com/tietang/props/kvs"
 )
 
 const (
@@ -195,7 +195,7 @@ func newClientbyConfig(c *config.EurekaConfig) *Client {
 
 // NewClient create a basic client that is configured to be used
 // with the given machine list.
-func NewClient(conf props.ConfigSource) *Client {
+func NewClient(conf kvs.ConfigSource) *Client {
     c := &config.EurekaConfig{
         Eureka: config.Eureka{
             Client:   config.NewEurekaClientConfig(),

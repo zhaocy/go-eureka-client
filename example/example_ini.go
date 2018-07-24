@@ -1,15 +1,16 @@
 package main
 
 import (
-    "github.com/tietang/props"
     "fmt"
     "encoding/json"
     "github.com/tietang/go-eureka-client/eureka"
+    "github.com/tietang/props/ini"
+    "github.com/tietang/props/kvs"
 )
 
 func main() {
-    iniconf := props.NewIniFileConfigSource("app.ini")
-    conf := props.NewDefaultCompositeConfigSource(iniconf)
+    iniconf := ini.NewIniFileConfigSource("app.ini")
+    conf := kvs.NewDefaultCompositeConfigSource(iniconf)
     fmt.Println(conf.GetDefault("eureka.instance.statusPageUrlPath", ""))
     //
     client := eureka.NewClient(conf)

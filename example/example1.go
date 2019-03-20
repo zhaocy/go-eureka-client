@@ -16,12 +16,7 @@ func main_yaml() {
 	println(string(data))
 	client.Start()
 	http.HandleFunc("/info", func(res http.ResponseWriter, req *http.Request) {
-		info := make(map[string]string)
-		data, err := json.Marshal(info)
-		if err != nil {
-			data = []byte("{}")
-		}
-		res.Write(data)
+
 	})
 	http.HandleFunc("/health", func(res http.ResponseWriter, req *http.Request) {
 		health := eureka.Health{Details: make(map[string]interface{})}

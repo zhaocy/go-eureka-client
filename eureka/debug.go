@@ -1,22 +1,23 @@
 package eureka
 
 import (
-	"github.com/ArthurHlt/gominlog"
-	"log"
+	log "github.com/sirupsen/logrus"
 )
 
-var logger *gominlog.MinLog
+var logger *log.Logger
 
 func GetLogger() *log.Logger {
-	return logger.GetLogger()
+	return log.StandardLogger()
 }
 
-func SetLogger(loggerLog *log.Logger) {
-	logger.SetLogger(loggerLog)
-}
-
+//
+//func SetLogger(loggerLog *log.Logger) {
+//	logger.SetLogger(loggerLog)
+//}
+//
 func init() {
 	// Default logger uses the go default log.
-	logger = gominlog.NewClassicMinLogWithPackageName("eureka")
-	logger.SetLevel(gominlog.Linfo)
+	//logger = gominlog.NewClassicMinLogWithPackageName("eureka")
+	//logger.SetLevel(gominlog.Linfo)
+	logger = GetLogger()
 }

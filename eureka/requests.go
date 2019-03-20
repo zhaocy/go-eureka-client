@@ -181,7 +181,7 @@ func NewInstanceInfo(hostName, appName, ip string, port int, evictionDurationInS
 // getCancelable issues a cancelable GET request
 func (c *Client) getCancelable(endpoint string,
 	cancel <-chan bool) (*RawResponse, error) {
-	logger.Debug("get %s [%s]", endpoint, c.Cluster.Leader)
+	logger.Debugf("get %s [%s]", endpoint, c.Cluster.Leader)
 	p := endpoint
 
 	req := NewRawRequest("GET", p, nil, cancel)
@@ -196,14 +196,14 @@ func (c *Client) getCancelable(endpoint string,
 
 // get issues a GET request
 func (c *Client) Get(endpoint string) (*RawResponse, error) {
-	logger.Debug("get %s%s", c.Cluster.Leader, endpoint)
+	logger.Debugf("get %s%s", c.Cluster.Leader, endpoint)
 	return c.getCancelable(endpoint, nil)
 }
 
 // put issues a PUT request
 func (c *Client) Put(endpoint string, body []byte) (*RawResponse, error) {
 
-	logger.Debug("put %s%s, [%s]", c.Cluster.Leader, endpoint, body)
+	logger.Debugf("put %s%s, [%s]", c.Cluster.Leader, endpoint, body)
 	p := endpoint
 
 	req := NewRawRequest("PUT", p, body, nil)
@@ -217,7 +217,7 @@ func (c *Client) Put(endpoint string, body []byte) (*RawResponse, error) {
 
 // post issues a POST request
 func (c *Client) Post(endpoint string, body []byte) (*RawResponse, error) {
-	logger.Debug("post %s%s, [%s]", c.Cluster.Leader, endpoint, body)
+	logger.Debugf("post %s%s, [%s]", c.Cluster.Leader, endpoint, body)
 	p := endpoint
 
 	req := NewRawRequest("POST", p, body, nil)
@@ -231,7 +231,7 @@ func (c *Client) Post(endpoint string, body []byte) (*RawResponse, error) {
 
 // delete issues a DELETE request
 func (c *Client) Delete(endpoint string) (*RawResponse, error) {
-	logger.Debug("delete %s%s", c.Cluster.Leader, endpoint)
+	logger.Debugf("delete %s%s", c.Cluster.Leader, endpoint)
 	p := endpoint
 	req := NewRawRequest("DELETE", p, nil, nil)
 	resp, err := c.SendRequest(req)
@@ -268,7 +268,7 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 			select {
 			case <-rr.cancel:
 				cancelled <- true
-				logger.Debug("send.request is cancelled")
+				logger.Debugf("send.request is cancelled")
 			case <-cancelRoutine:
 				return
 			}
@@ -307,11 +307,11 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 			}
 		}
 
-		logger.Debug("Connecting to eureka: attempt %d for %s", attempt+1, rr.relativePath)
+		logger.Debugf("Connecting to eureka: attempt %d for %s", attempt+1, rr.relativePath)
 
 		httpPath = c.getHttpPath(false, rr.relativePath)
 
-		//		logger.Debug("send.request.to %s | method %s ", httpPath, rr.method)
+		logger.Debugf("send.request.to %s | method %s ", httpPath, rr.method)
 
 		req, err := func() (*http.Request, error) {
 			reqLock.Lock()
@@ -347,7 +347,7 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 
 		// network error, change a machine!
 		if err != nil {
-			logger.Error("network error: %v", err.Error())
+			logger.Errorf("network error: %v", err.Error())
 			lastResp := http.Response{}
 			if checkErr := checkRetry(c.Cluster, numReqs, lastResp, err); checkErr != nil {
 				return nil, checkErr
@@ -358,13 +358,13 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 		}
 
 		// if there is no error, it should receive response
-		logger.Debug("recv.response.from " + httpPath)
+		logger.Debugf("recv.response.from " + httpPath)
 
 		if validHttpStatusCode[resp.StatusCode] {
 			// try to read byte code and break the loop
 			respBody, err = ioutil.ReadAll(resp.Body)
 			if err == nil {
-				logger.Debug("recv.success " + httpPath + " " + resp.Status)
+				logger.Debugf("recv.success " + httpPath + " " + resp.Status)
 				break
 			}
 			// ReadAll error may be caused due to cancel request
@@ -394,7 +394,7 @@ func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 				// Update cluster leader based on redirect location
 				// because it should point to the leader address
 				c.Cluster.updateLeaderFromURL(u)
-				logger.Debug("recv.response.relocate " + u.String())
+				logger.Debugf("recv.response.relocate " + u.String())
 			}
 			resp.Body.Close()
 			continue
@@ -433,7 +433,7 @@ func DefaultCheckRetry(cluster *Cluster, numReqs int, lastResp http.Response,
 
 	}
 
-	logger.Warning("bad response status code %d", code)
+	logger.Warningf("bad response status code %d", code)
 	return nil
 }
 

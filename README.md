@@ -7,6 +7,10 @@ Go Eureka Client
 
 
 Based and fork on code from https://github.com/ArthurHlt/go-eureka-client .
+## Install
+```shell
+go get -u github.com/tietang/go-eureka-client/eureka 
+```
 
 ## Getting started
 

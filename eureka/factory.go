@@ -228,7 +228,20 @@ func NewClient(conf kvs.ConfigSource) *Client {
 }
 
 func NewClientByConfig(machines []string, config Config) *Client {
+	client := &Client{
+		Cluster: NewCluster(machines),
+		Config:  config,
+	}
+	logger.Debugf("%+v", client.Cluster)
+	client.initHTTPClient()
+	return client
+}
 
+func NewClientDefault(machines []string) *Client {
+	config := Config{
+		// default timeout is one second
+		DialTimeout: time.Second,
+	}
 	client := &Client{
 		Cluster: NewCluster(machines),
 		Config:  config,

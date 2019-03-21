@@ -1,26 +1,28 @@
 package main
 
 import (
-    "fmt"
-    "encoding/json"
-    "github.com/tietang/go-eureka-client/eureka"
-    "github.com/tietang/props/ini"
-    "github.com/tietang/props/kvs"
+	"encoding/json"
+	"fmt"
+	"github.com/tietang/go-eureka-client/eureka"
+	"github.com/tietang/props/ini"
+	"github.com/tietang/props/kvs"
 )
 
 func main() {
-    iniconf := ini.NewIniFileConfigSource("app.ini")
-    conf := kvs.NewDefaultCompositeConfigSource(iniconf)
-    fmt.Println(conf.GetDefault("eureka.instance.statusPageUrlPath", ""))
-    //
-    client := eureka.NewClient(conf)
+	f := kvs.GetCurrentFilePath("app.ini", 1)
+	fmt.Println(f)
+	iniconf := ini.NewIniFileConfigSource("app.ini")
+	conf := kvs.NewDefaultCompositeConfigSource(iniconf)
+	fmt.Println(conf.GetDefault("eureka.instance.statusPageUrlPath", ""))
+	//
+	client := eureka.NewClient(conf)
 
-    data, _ := json.Marshal(client.InstanceInfo)
-    fmt.Println(string(data))
-    client.Start()
-    c := make(chan int, 1)
-    x := <-c
-    fmt.Println(x)
+	data, _ := json.Marshal(client.InstanceInfo)
+	fmt.Println(string(data))
+	client.Start()
+	c := make(chan int, 1)
+	x := <-c
+	fmt.Println(x)
 
 }
 

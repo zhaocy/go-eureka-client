@@ -11,7 +11,7 @@ import (
 func main() {
 	f := kvs.GetCurrentFilePath("app.ini", 1)
 	fmt.Println(f)
-	iniconf := ini.NewIniFileConfigSource("app.ini")
+	iniconf := ini.NewIniFileConfigSource(f)
 	conf := kvs.NewDefaultCompositeConfigSource(iniconf)
 	fmt.Println(conf.GetDefault("eureka.instance.statusPageUrlPath", ""))
 	//

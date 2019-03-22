@@ -18,6 +18,7 @@ func main_test() {
 
 	cfg := file + "/application.yml"
 	data, err := ReadFile(cfg)
+
 	c := config.EurekaConfig{
 		Eureka: config.Eureka{
 			Client:   config.NewEurekaClientConfig(),

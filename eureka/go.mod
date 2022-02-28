@@ -1,4 +1,4 @@
-module github.com/tietang/go-eureka-client/eureka
+module github.com/zhaocy/go-eureka-client/eureka
 
 go 1.12
 

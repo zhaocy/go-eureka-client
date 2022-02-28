@@ -84,8 +84,8 @@ import (
     "fmt"
     "encoding/json"
     "github.com/tietang/go-eureka-client/eureka"
-    "github.com/tietang/props/ini"
-    "github.com/tietang/props/kvs"
+    "github.com/tietang/props/v3/ini"
+    "github.com/tietang/props/v3/kvs"
 )
 
 func main() {

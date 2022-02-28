@@ -2,7 +2,7 @@ package eureka
 
 import (
     "testing"
-    "github.com/tietang/props"
+    "github.com/tietang/props/v3"
     . "github.com/smartystreets/goconvey/convey"
     "strconv"
 )

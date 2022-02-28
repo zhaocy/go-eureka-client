@@ -15,7 +15,7 @@ import (
 
 	"github.com/tietang/go-eureka-client/eureka/config"
 	"github.com/tietang/go-utils"
-	"github.com/tietang/props/kvs"
+	"github.com/tietang/props/v3/kvs"
 )
 
 const (

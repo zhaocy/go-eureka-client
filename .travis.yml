@@ -6,5 +6,5 @@ install:
   - go get github.com/tietang/go-utils
   - go get github.com/sirupsen/logrus
   - go get gopkg.in/yam.v2
-  - go get github.com/tietang/props
+  - go get github.com/tietang/props/v3
   - go get github.com/smartystreets/goconvey/convey
